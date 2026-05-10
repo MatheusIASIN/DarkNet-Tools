@@ -1,0 +1,343 @@
+# 📋 Relatório Técnico — DarkNet Tools
+**Autor:** Matheus Iasin  
+**Data:** 2025  
+**Versão do Relatório:** 1.0  
+**Status do Projeto:** Pausado — base completa, pronto para evoluir
+
+---
+
+## 1. VISÃO GERAL DO PROJETO
+
+### O que é o DarkNet Tools?
+Conjunto de ferramentas de suporte técnico desenvolvidas para automatizar tarefas repetitivas do dia a dia de TI, eliminando a necessidade de executar comandos manualmente. O projeto nasceu da necessidade prática de resolver problemas de suporte de forma rápida e padronizada.
+
+### Inspiração
+A interface gráfica (TemPad) foi inspirada no **TemPad da série Loki (Marvel/Disney+)** — um dispositivo compacto que executa ações poderosas com poucos cliques. O tema visual usa laranja/dourado remetendo ao dispositivo da TVA.
+
+### Objetivo Final
+Unificar todas as ferramentas em um **executável único** (.exe ou .bat avançado) que qualquer técnico possa usar sem precisar instalar nada.
+
+---
+
+## 2. HISTÓRICO DE DESENVOLVIMENTO
+
+### Linha do Tempo
+
+| Período | O que foi criado | Observação |
+|---------|-----------------|------------|
+| 2024 — início | `tempad.py` + scripts Python | Primeira versão, interface gráfica |
+| 2024 | `check_dependencies.py` | Verificador de dependências automático |
+| 2024 | `DarkNet_Tools.bat` | Versão terminal, 9 opções de rede |
+| 2024 | `ping_report.ps1` | Relatório de ping em massa (PowerShell) |
+| 2024 | `disk_check.py` | Versão OOP com log e cores |
+| 2025 | `painel_suporte.bat` | Painel completo, 26 opções |
+
+### Evolução da Ideia
+```
+IDEIA INICIAL (2024)
+    └── GUI visual em Python (TemPad)
+            └── Chamava 4 scripts externos
+
+REFINAMENTO
+    └── Batch puro — mais rápido, sem dependências
+            └── DarkNet Tools (9 opções de rede)
+
+EXPANSÃO
+    └── PowerShell — automação em massa
+            └── Relatório de ping em 51 IPs
+
+MATURIDADE
+    └── Painel de Suporte completo
+            └── 26 opções cobrindo todo o suporte
+```
+
+---
+
+## 3. ESTRUTURA DE ARQUIVOS
+
+```
+DarkNet-Tools/
+│
+├── 📄 tempad.py                  # Interface gráfica principal
+├── 📄 check_dependencies.py      # Verificador de dependências
+├── 📄 DarkNet_Tools.bat          # Menu diagnóstico de rede
+├── 📄 painel_suporte.bat         # Painel completo de suporte
+├── 📄 ping_report.ps1            # Relatório de ping em massa
+│
+├── 📁 scripts/
+│   ├── optimize.py               # Limpeza do sistema
+│   ├── network_diagnosis.py      # Diagnóstico de rede
+│   ├── disk_check.py             # Manutenção de disco
+│   └── security_scan.py         # Verificação de segurança
+│
+└── 📁 assets/
+    ├── hard-disk.gif
+    ├── optimization.gif
+    ├── network.gif
+    └── safe.gif
+```
+
+---
+
+## 4. DETALHAMENTO DE CADA ARQUIVO
+
+---
+
+### 4.1 tempad.py — Interface Gráfica
+**Linguagem:** Python  
+**Biblioteca:** tkinter  
+**Função:** GUI central que chama os scripts de manutenção
+
+**Como funciona:**
+- Janela 600x600px com fundo escuro (#1c1c1c) e texto verde neon (#00ff00)
+- 4 botões com ícones GIF carregados da pasta `assets/`
+- Área de log com `ScrolledText` que exibe saída dos scripts
+- Cada botão chama `subprocess.run()` no script correspondente
+
+**Pontos de atenção para quando retomar:**
+- Caminhos hardcoded: `C:\Users\Matheus\Desktop\Rare\` — trocar por `os.path.dirname(__file__)`
+- Log não atualiza em tempo real (subprocess bloqueia até terminar) — usar `subprocess.Popen()` com threads
+- Ícones usam `.subsample(4,4)` para redimensionar — verificar se o tamanho está adequado
+
+**Código-chave:**
+```python
+# Trocar isso:
+ASSETS_DIR = r"C:\Users\Matheus\Desktop\Rare\assets"
+SCRIPTS_DIR = r"C:\Users\Matheus\Desktop\Rare\scripts"
+
+# Por isso:
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ASSETS_DIR = os.path.join(BASE_DIR, "assets")
+SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
+```
+
+---
+
+### 4.2 check_dependencies.py — Verificador de Dependências
+**Linguagem:** Python  
+**Função:** Verifica e instala automaticamente os pacotes necessários
+
+**Pacotes verificados:**
+- `pygame`, `playsound`, `requests`, `Pillow`, `psutil`
+- `tkinter` — verificado mas não instalável via pip (builtin do Python)
+
+**Observação:** Rodar esse script antes do `tempad.py` garante que tudo funcione.
+
+---
+
+### 4.3 DarkNet_Tools.bat — Diagnóstico de Rede
+**Linguagem:** Batch  
+**Função:** Menu interativo de diagnóstico de rede  
+**Opções:** 9
+
+| Opção | Comando | O que faz |
+|-------|---------|-----------|
+| 1 | `ipconfig` | Mostra IP básico |
+| 2 | `ipconfig /all` | Mostra IP detalhado + MAC + DNS |
+| 3 | `ipconfig /release` + `/renew` | Renova o IP via DHCP |
+| 4 | `ipconfig /flushdns` | Limpa cache DNS |
+| 5 | `ping` | Testa conectividade com IP digitado |
+| 6 | `tracert` | Traça rota até o destino |
+| 7 | `netstat -an` | Mostra conexões ativas |
+| 8 | `getmac` | Mostra MAC Address |
+| 9 | Diagnóstico rápido | Combinação de comandos |
+
+**Vantagem principal:** Roda em qualquer máquina Windows sem instalar nada.
+
+---
+
+### 4.4 painel_suporte.bat — Painel Completo de Suporte
+**Linguagem:** Batch  
+**Função:** Painel completo de suporte técnico  
+**Opções:** 26
+
+#### Categoria: Manutenção do Sistema
+| Opção | Comando | O que faz |
+|-------|---------|-----------|
+| 1 | `del /s /f /q %TEMP%\*` | Limpa temporários do usuário |
+| 2 | `cleanmgr /sagerun:1` | Limpeza de disco completa |
+| 3 | `sfc /scannow` | Verifica integridade dos arquivos do Windows |
+| 4 | `DISM /RestoreHealth` | Repara imagem do Windows |
+| 5 | Reset completo do WU | Para serviços, renomeia pastas, reinicia |
+| 15 | `chkdsk C: /f /r` | Verifica e repara erros no disco C: |
+
+#### Categoria: Rede
+| Opção | Comando | O que faz |
+|-------|---------|-----------|
+| 6 | `ipconfig /flushdns` + `netsh` | Reset completo de rede |
+| 17 | `ipconfig` | Exibe configurações de IP |
+| 23 | `ping www.google.com` | Testa conectividade |
+| 20 | `start fast.com` | Testa velocidade da internet |
+
+#### Categoria: Sistema e Informações
+| Opção | Comando | O que faz |
+|-------|---------|-----------|
+| 9 | `msinfo32` | Informações completas do sistema |
+| 10 | `devmgmt.msc` | Gerenciador de dispositivos |
+| 11 | `ncpa.cpl` | Adaptadores de rede |
+| 12 | `appwiz.cpl` | Programas instalados |
+| 13 | `tasklist` | Processos em execução |
+| 14 | `sc query` | Status dos serviços principais |
+| 21 | `wmic logicaldisk` | Espaço em disco |
+| 22 | `Get-MpComputerStatus` | Status do Windows Defender |
+| 25 | `wmic CIM_LogicalDevice` | Dispositivos USB conectados |
+| 26 | `taskmgr` | Uso de memória e CPU |
+
+#### Categoria: Administração
+| Opção | Comando | O que faz |
+|-------|---------|-----------|
+| 7 | `gpupdate /force` | Atualiza políticas de grupo |
+| 8 | `wevtutil cl` | Limpa todos os logs de eventos |
+| 24 | `wevtutil epl` | Backup dos logs em `C:\BackupLogs` |
+| 16 | `start powershell` | Abre PowerShell |
+| 18 | `start \\brprt001` | Abre pasta de drivers de impressora |
+
+---
+
+### 4.5 ping_report.ps1 — Relatório de Ping em Massa
+**Linguagem:** PowerShell  
+**Função:** Pinga uma lista de IPs e gera relatório
+
+**Lista de IPs monitorados:** 51 hosts na subnet `10.3.40.x` e outros  
+**Saída:** `Relatorio_Ping.txt` salvo no Desktop  
+**Formato do relatório:**
+```
+10.3.40.10 - OK
+10.3.40.25 - ERRO
+10.3.40.40 - OK
+...
+```
+
+**Melhorias planejadas:**
+- Exportar em `.html` com tabela colorida (verde = OK, vermelho = ERRO)
+- Exportar em `.csv` para abrir no Excel
+- Tornar a lista de IPs configurável via arquivo `.txt` externo
+- Adicionar timestamp no relatório
+
+---
+
+### 4.6 disk_check.py — Manutenção de Disco
+**Linguagem:** Python  
+**Padrão:** Orientado a Objetos (OOP)  
+**Classes:**
+
+| Classe | Responsabilidade |
+|--------|-----------------|
+| `Cor` | Constantes de cores ANSI para terminal |
+| `Logger` | Registro de eventos em `C:\manutencao_sistema.log` |
+| `ManutencaoSistema` | Lógica principal de verificação |
+| `Menu` | Interface do menu interativo |
+
+**Funcionalidades:**
+- Verificação de permissão de administrador (`ctypes.windll.shell32.IsUserAnAdmin()`)
+- Lista discos disponíveis via `psutil.disk_partitions()`
+- Detecta se disco está em uso antes de rodar `chkdsk`
+- Oferece agendar verificação no boot se disco estiver ocupado
+- Executa `chkdsk /f /r`, `sfc /scannow`, `DISM /RestoreHealth`
+- Verifica saúde do HD via `wmic diskdrive get model, status`
+- Exibe uso detalhado (total, livre, percentual) por partição
+- Log com timestamp em `C:\manutencao_sistema.log`
+
+**Este é o script mais maduro do projeto** — usa OOP, tratamento de erros, cores no terminal e log automático.
+
+---
+
+### 4.7 network_diagnosis.py — Diagnóstico de Rede
+**Linguagem:** Python  
+**Função:** Diagnóstico básico de rede
+
+**O que faz:**
+- Ping para `8.8.8.8` (Google DNS)
+- Traceroute para `8.8.8.8`
+
+**Melhorias planejadas:**
+- Exibir IP local, MAC, DNS
+- Flush de cache DNS
+- Verificar gateway
+- Exportar resultado em `.txt`
+
+---
+
+### 4.8 optimize.py — Otimização do Sistema
+**Linguagem:** Python  
+**Função:** Limpeza rápida do sistema
+
+**O que faz:**
+- `del /s /q %temp%\*.*` — limpa temporários do usuário
+- `del /s /q C:\Windows\Temp\*.*` — limpa temporários do sistema
+- `Clear-RecycleBin -Force` via PowerShell — esvazia Lixeira
+
+**Melhoria planejada:** Adicionar limpeza do `C:\Windows\Prefetch\*`
+
+---
+
+### 4.9 security_scan.py — Verificação de Segurança
+**Linguagem:** Python  
+**Função:** Verificação de arquivos corrompidos
+
+**O que faz:**
+- Executa `sfc /scannow`
+
+**Observação:** Script simples, sem OOP. Candidato a ser expandido com verificação do Windows Defender.
+
+---
+
+## 5. TECNOLOGIAS UTILIZADAS
+
+| Tecnologia | Uso no Projeto |
+|-----------|---------------|
+| Python 3.x | Scripts de automação e interface gráfica |
+| tkinter | Interface gráfica do TemPad |
+| psutil | Informações de disco, processos e partições |
+| subprocess | Execução de comandos do sistema |
+| ctypes | Verificação de permissões de administrador |
+| Batch (.bat) | Menus interativos de terminal |
+| PowerShell | Relatório de ping em massa |
+
+---
+
+## 6. MELHORIAS PLANEJADAS (BACKLOG)
+
+### Alta Prioridade
+- [ ] Corrigir caminhos hardcoded no `tempad.py`
+- [ ] Log em tempo real na GUI (usar `subprocess.Popen` + threads)
+- [ ] Adicionar limpeza do `Prefetch` no `optimize.py` e `painel_suporte.bat`
+- [ ] Submenus por categoria no `painel_suporte.bat`
+- [ ] Validação de entrada no `painel_suporte.bat`
+
+### Média Prioridade
+- [ ] Exportar relatório de ping em `.html` ou `.csv`
+- [ ] Tornar lista de IPs configurável via arquivo externo
+- [ ] Adicionar log de execução no `painel_suporte.bat`
+- [ ] Expandir `network_diagnosis.py` com IP, MAC, DNS e flush
+
+### Baixa Prioridade / Futuro
+- [ ] Unificar tudo em executável único (.exe via PyInstaller)
+- [ ] Comentar todos os scripts detalhadamente
+- [ ] Automação com Python + SSH (Netmiko/Paramiko) para equipamentos Cisco
+- [ ] Versão web do painel (HTML/CSS/JS)
+
+---
+
+## 7. PRÓXIMO PROJETO — TEMPAD 2.0
+
+Quando retomar, a ideia é unificar tudo com:
+
+- Interface visual no tema **laranja/TVA** (já prototipado em HTML/CSS)
+- Menu principal com submenus por categoria
+- Log em tempo real animado
+- Relatório exportável em HTML
+- Ping em massa com lista de IPs configurável
+- Compatível com equipamentos Cisco via SSH (Netmiko)
+- Distribuído como `.exe` via PyInstaller
+
+---
+
+## 8. PERFIL TÉCNICO DO PROJETO
+
+**Área:** Suporte técnico · Redes · Automação Windows  
+**Linguagens:** Python · Batch · PowerShell  
+**Nível:** Intermediário — uso real em ambiente de trabalho  
+**Diferencial:** Ferramentas construídas na prática, não em tutorial  
+**Inspiração visual:** TemPad — Loki (Marvel/Disney+)  
+**Conexão futura:** Cisco CCNA + automação de redes com Python
