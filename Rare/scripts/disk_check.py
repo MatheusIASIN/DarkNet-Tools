@@ -5,6 +5,12 @@ import time
 import psutil
 from datetime import datetime
 
+import platform
+
+if platform.system() != "Windows":
+    print("⚠️ Este módulo só funciona no Windows.")
+    exit()
+
 # 🎨 Cores para terminal
 class Cor:
     AZUL = "\033[94m"
