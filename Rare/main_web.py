@@ -2,7 +2,7 @@
 ============================================
 DarkNet Tools — TemPad Web
 Criado por: Matheus Iasin
-Versao: 3.0 (Web)
+Versao: 3.0 (Web - TVA Retro Style)
 ============================================
 COMO RODAR:
     pip install flask
@@ -30,11 +30,16 @@ HTML = """
 <head>
 <meta charset="UTF-8">
 <title>TemPad — TVA Tools</title>
+<!-- Importação da fonte Retro Monospaced da TVA -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     background: #0d0700;
-    font-family: monospace;
+    font-family: 'VT323', monospace;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,7 +49,7 @@ HTML = """
     background: linear-gradient(160deg, #c45a00, #7a3200);
     border-radius: 32px;
     padding: 6px;
-    width: 420px;
+    width: 440px;
     box-shadow: 0 0 0 2px #e87a20, 0 8px 40px rgba(0,0,0,0.8);
   }
   .inner {
@@ -60,15 +65,17 @@ HTML = """
     margin-bottom: 14px;
   }
   .logo {
-    font-size: 16px;
+    font-size: 22px;
     font-weight: bold;
     color: #ff9933;
-    letter-spacing: 3px;
+    letter-spacing: 4px;
+    text-shadow: 0 0 6px rgba(255, 153, 51, 0.6);
   }
   .status {
-    font-size: 10px;
-    color: #994400;
+    font-size: 14px;
+    color: #b35000;
     text-align: right;
+    line-height: 1.2;
   }
   .dot {
     width: 8px; height: 8px;
@@ -76,24 +83,34 @@ HTML = """
     background: #ff8800;
     display: inline-block;
     animation: blink 2s infinite;
+    box-shadow: 0 0 6px #ff8800;
   }
   @keyframes blink {
-    0%,100% { opacity:1; } 50% { opacity:0.3; }
+    0%,100% { opacity:1; } 50% { opacity:0.2; }
   }
+  
+  /* DISPLAY ESTILO RETRO CRT / TVA */
   .screen {
-    background: #0a0500;
+    background: #060300;
     border-radius: 12px;
-    border: 1px solid #3a2000;
+    border: 1px solid #ff880044;
     padding: 12px;
-    height: 140px;
+    height: 160px;
     overflow-y: auto;
     margin-bottom: 16px;
-    font-size: 11px;
-    color: #ff8800;
-    line-height: 1.7;
+    font-family: 'VT323', monospace;
+    font-size: 17px;
+    letter-spacing: 1px;
+    color: #ff9900;
+    line-height: 1.3;
+    
+    /* Efeito de iluminação de fósforo laranja */
+    text-shadow: 0 0 5px rgba(255, 136, 0, 0.7);
+    box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.9);
   }
-  .screen::-webkit-scrollbar { width: 3px; }
-  .screen::-webkit-scrollbar-thumb { background: #5a3000; }
+  .screen::-webkit-scrollbar { width: 4px; }
+  .screen::-webkit-scrollbar-thumb { background: #5a3000; border-radius: 2px; }
+  
   .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -104,36 +121,42 @@ HTML = """
     background: #1f0f00;
     border: 1px solid #5a3000;
     border-radius: 12px;
-    padding: 14px 8px;
+    padding: 12px 8px;
     color: #ff9933;
-    font-family: monospace;
-    font-size: 11px;
+    font-family: 'VT323', monospace;
+    font-size: 16px;
+    letter-spacing: 1px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 3px;
     transition: all 0.15s;
     text-align: center;
   }
-  .btn:hover { background: #2e1800; border-color: #ff8800; }
+  .btn:hover { 
+    background: #2e1800; 
+    border-color: #ff8800;
+    box-shadow: 0 0 10px rgba(255, 136, 0, 0.2);
+  }
   .btn:active { transform: scale(0.97); }
-  .btn-icon { font-size: 20px; }
-  .btn-sub { color: #664400; font-size: 9px; }
+  .btn-icon { font-size: 22px; }
+  .btn-sub { color: #884400; font-size: 13px; font-family: 'VT323', monospace; }
   .btn-exit {
     width: 100%;
     background: #2a0a00;
     border: 1px solid #6a2000;
     border-radius: 12px;
-    padding: 11px;
+    padding: 10px;
     color: #ff4400;
-    font-family: monospace;
-    font-size: 11px;
+    font-family: 'VT323', monospace;
+    font-size: 16px;
     cursor: pointer;
     letter-spacing: 2px;
     margin-top: 4px;
+    text-shadow: 0 0 4px rgba(255, 68, 0, 0.5);
   }
-  .btn-exit:hover { background: #3a1500; }
+  .btn-exit:hover { background: #3a1500; border-color: #ff4400; }
   .divider { height: 1px; background: #3a1800; margin: 12px 0; }
   .footer {
     display: flex;
@@ -147,7 +170,7 @@ HTML = """
     border-radius: 50%;
     background: #5a3000;
   }
-  .dot-sm.active { background: #ff8800; animation: blink 2s infinite; }
+  .dot-sm.active { background: #ff8800; animation: blink 2s infinite; box-shadow: 0 0 4px #ff8800; }
   .running { border-color: #ff8800 !important; background: #2a1400 !important; }
 </style>
 </head>
@@ -201,7 +224,7 @@ HTML = """
         <div class="dot-sm"></div>
         <div class="dot-sm"></div>
       </div>
-      <span style="font-size:9px;color:#4a2800;">AUTORIDADE DE VARIÂNCIA TEMPORAL</span>
+      <span style="font-size:12px;color:#6a3800;">AUTORIDADE DE VARIÂNCIA TEMPORAL</span>
     </div>
   </div>
 </div>
@@ -270,8 +293,9 @@ def rodar(modulo):
             yield f"data: ❌ Script não encontrado: {script}\n\n"
             return
 
+        # -u garante o streaming de stdout sem buffering
         processo = subprocess.Popen(
-            ['python', caminho],
+            ['python', '-u', caminho],
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True
