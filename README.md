@@ -1,203 +1,149 @@
-# 🖥️ DarkNet Tools — Ferramentas de Suporte e Diagnóstico
 
-**Criado por:** Matheus Iasin  
+```markdown
+# 🖥️ DarkNet Tools — TemPad (TVA Support & Diagnostic Suite)
+
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.x-black?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
+[![License](https://img.shields.io/badge/Status-Em%20Evolu%C3%A7%C3%A3o-orange?style=for-the-badge)](#-evolu%C3%A7%C3%A3o-do-projeto)
+
+**Criado por:** [Matheus Iasin](https://github.com/MatheusIASIN)  
 **Início:** 2024  
-**Status:** Em evolução — base pronta, próxima etapa: unificar em executável
+**Versão Atual:** v3.3 (Web CRT & Audio FX)  
+
+---
+
+## 📸 Interface TemPad Web
+
+![TemPad Web CRT Interface](docs/tempad_preview.png)
+*> Interface Web estilo TVA com efeito CRT âmbar, barra de status animada e feedback sonoro via Web Audio API.*
 
 ---
 
 ## 💡 Ideia Central
 
-Um painel central que execute ações de suporte de TI de forma rápida e automatizada, sem precisar fazer tudo na mão.
+Um painel central de suporte e diagnóstico de TI de alta performance, projetado para automação de rotinas de manutenção de sistemas Windows e redes, reduzindo drasticamente o tempo de atendimento técnico.
 
-O projeto nasceu como uma GUI em Python (TemPad), evoluiu para scripts de terminal ágeis em Batch e PowerShell, e no futuro será unificado em um executável profissional.
+O projeto nasceu como uma GUI local em Python (Tkinter), expandiu-se com scripts ágeis em Batch e PowerShell para o terminal do Windows, e agora evoluiu para uma **interface web responsiva com estética retrofuturista estilo TVA (TemPad - Marvel/Loki)** com efeitos visuais CRT e efeitos sonoros gerados via Web Audio API.
 
 ---
 
-## 📁 Estrutura do Projeto
+## 🚀 Principais Destaques (v3.3)
 
-```
+- 🎛️ **Interface TemPad Web:** Painel web construído em **Flask** e **Bootstrap 5** com iluminação âmbar, scanlines CRT e estética de terminal analógico.
+- 🔊 **Web Audio API Synth:** Efeitos sonoros retrô sintetizados diretamente pelo navegador (sem dependência de arquivos `.mp3`/`.wav` externos).
+- 📊 **Monitor de Progresso:** Barras de status animadas e execução de diagnósticos em tempo real.
+- ⚡ **Scripts Autônomos:** Suporte nativo a tarefas de disco, limpeza de temporários, verificação de integridade (SFC/DISM) e diagnósticos de rede.
+
+---
+
+## 📁 Estrutura do Repositório
+
+```text
 DarkNet-Tools/
-├── assets/                    # Ícones da interface gráfica
-│   ├── hard-disk.gif
-│   ├── optimization.gif
-│   ├── network.gif
-│   └── safe.gif
+├── Rare/                      # Módulo Principal Web (TemPad v3.3)
+│   ├── main_web.py            # Servidor Flask, rotas e interface CRT/Áudio
+│   ├── main.py                # Interface gráfica desktop legada (Tkinter)
+│   ├── disk_check.py          # Verificação e saúde de disco
+│   ├── optimize.py            # Otimização e limpeza de temporários
+│   ├── network_diagnosis.py   # Diagnóstico de rede (ping, traceroute)
+│   └── security_scan.py       # Verificação de integridade (SFC)
 │
-├── scripts/                   # Scripts Python do TemPad
-│   ├── optimize.py            # Limpeza de temporários e lixeira
-│   ├── network_diagnosis.py   # Diagnóstico de rede (ping, tracert)
-│   ├── disk_check.py          # Verificação e manutenção de disco
-│   └── security_scan.py       # Verificação de arquivos (SFC)
+├── scripts/                   # Scripts auxiliares do projeto
+│   ├── tempad.py              # Interface legada alternativa
+│   └── check_dependencies.py  # Verificador/instalador de dependências
 │
-├── tempad.py                  # Interface gráfica principal (tkinter)
-├── DarkNet_Tools.bat          # Menu de diagnóstico de rede (9 opções)
-├── painel_suporte.bat         # Painel completo de suporte (26 opções)
-├── ping_report.ps1            # Relatório de ping em massa (PowerShell)
-└── check_dependencies.py      # Verificador/instalador de dependências
-```
-
----
-
-## 🧩 Scripts — O que cada um faz
-
-### 🖥️ tempad.py — Interface Gráfica Central
-- GUI com tema laranja (inspirado no TemPad da série Loki/TVA)
-- Botões com ícones para executar cada script
-- Log em tempo real da execução
-
-**⚠️ Melhorias planejadas:**
-- Substituir caminhos hardcoded por `os.path.dirname(__file__)`
-- Atualizar log em tempo real sem bloquear a GUI
-
----
-
-### 🌐 DarkNet_Tools.bat — Diagnóstico de Rede no Terminal
-Menu interativo com 9 opções:
-1. Mostrar IP
-2. Mostrar IP detalhado
-3. Renovar IP
-4. Limpar Cache DNS
-5. Testar Ping
-6. Traçar Rota
-7. Conexões Ativas
-8. Mostrar MAC Address
-9. Diagnóstico Rápido
-
-**Vantagem:** Roda em qualquer máquina Windows sem dependências.
-
----
-
-### 🛠️ painel_suporte.bat — Painel Completo de Suporte (26 opções)
-Menu interativo completo para suporte técnico no dia a dia:
-
-**Manutenção do Sistema**
-- Limpeza de arquivos temporários
-- Limpeza de disco (cleanmgr)
-- Verificação de arquivos do sistema (SFC)
-- Reparo da imagem do Windows (DISM)
-- Reset do Windows Update
-- CHKDSK no disco C:
-
-**Rede**
-- Reset de configurações de rede
-- Verificar ipconfig
-- Testar conectividade com o Google
-- Testar velocidade da internet (fast.com)
-
-**Sistema e Informações**
-- Informações do sistema (msinfo32)
-- Gerenciador de dispositivos
-- Ver adaptadores de rede
-- Ver programas instalados
-- Ver processos em execução
-- Status dos principais serviços
-- Verificar espaço em disco
-- Verificar status do antivírus
-- Visualizar dispositivos USB
-- Ver uso de memória e CPU
-
-**Administração**
-- Atualização de políticas de grupo (GPO)
-- Limpeza de logs de eventos
-- Backup dos logs de eventos
-- Abrir PowerShell
-- Instalar impressora / Abrir driver
-
-**Vantagem:** Construído com uso real no trabalho — cada opção resolve um problema do dia a dia de suporte.
-
----
-
-### 📡 ping_report.ps1 — Relatório de Ping em Massa
-- Recebe uma lista de IPs
-- Faz ping em todos automaticamente
-- Gera `Relatorio_Ping.txt` no Desktop
-
-**⚠️ Melhorias planejadas:**
-- Exportar em `.csv` ou `.html`
-- Tornar a lista de IPs configurável via arquivo externo
-
----
-
-### 💿 disk_check.py — Manutenção de Disco
-- Estrutura orientada a objetos
-- Verifica permissões de administrador
-- Executa `chkdsk`, `SFC` e `DISM`
-- Verifica saúde física do HD/SSD
-- Gera log com timestamp
-
----
-
-### 🌐 network_diagnosis.py — Diagnóstico de Rede
-- Ping para `8.8.8.8`
-- Traceroute para `8.8.8.8`
-
----
-
-### ⚡ optimize.py — Otimização do Sistema
-- Limpa pasta `%TEMP%`
-- Limpa `C:\Windows\Temp`
-- Esvazia a Lixeira
-
----
-
-### 🔒 security_scan.py — Verificação de Segurança
-- Executa `sfc /scannow` para verificar arquivos corrompidos
-
----
-
-### 📦 check_dependencies.py — Verificador de Dependências
-- Verifica e instala pacotes necessários automaticamente
-
----
-
-## 🔗 Como os projetos se conectam
+├── DarkNet_Tools.bat          # Menu rápido de diagnóstico de rede (9 opções)
+├── painel_suporte.bat         # Painel completo de suporte no terminal (26 opções)
+└── ping_report.ps1            # Relatório de ping em massa (PowerShell)
 
 ```
-IDEIA CENTRAL: Painel de suporte automatizado
-        │
-        ├── tempad.py (GUI) ────────► Interface visual, chama os scripts
-        │       └── scripts/        ► optimize, network, disk, security
-        │
-        ├── DarkNet_Tools.bat ──────► Diagnóstico de rede rápido (9 opções)
-        │
-        ├── painel_suporte.bat ─────► Suporte completo no terminal (26 opções)
-        │
-        ├── ping_report.ps1 ────────► Automação em massa, relatório de IPs
-        │
-        └── PRÓXIMO PASSO ──────────► Executável unificado
-```
+
+---
+
+## 🧩 Componentes do Sistema
+
+### 🌐 1. TemPad Web (`Rare/main_web.py`)
+
+* **Web Console CRT:** Interface web inspirada nos monitores analógicos da Autoridade de Variância Temporal (TVA).
+* **Som Sintetizado:** Feedback sonoro ao interagir com botões e durante o carregamento de diagnósticos.
+* **Painel Responsivo:** Compatível com telas desktop e dispositivos móveis.
+
+### 🛠️ 2. Módulos Python de Diagnóstico (`Rare/`)
+
+* **`disk_check.py`:** Automação para `chkdsk`, saúde física do disco e verificação de permissões de administrador.
+* **`optimize.py`:** Limpeza profunda de diretórios temporários (`%TEMP%`, `C:\Windows\Temp`) e esvaziamento da lixeira.
+* **`network_diagnosis.py`:** Teste de latência (ping) e traçamento de rota (traceroute).
+* **`security_scan.py`:** Verificação de integridade do sistema operacional com `sfc /scannow`.
+
+### 🖥️ 3. Scripts de Terminal e Automação
+
+* **`painel_suporte.bat`:** Menu com 26 opções abrangendo manutenção de sistema, reparo de Windows Update, configurações de rede, GPO e ferramentas de administração.
+* **`DarkNet_Tools.bat`:** Menu rápido com 9 funções focadas exclusivamente em diagnóstico de rede.
+* **`ping_report.ps1`:** Script PowerShell para varredura de múltiplos IPs e geração de relatório em texto no Desktop.
 
 ---
 
 ## 📊 Evolução do Projeto
 
-| Versão | Script | Linguagem | Opções |
-|--------|--------|-----------|--------|
-| v1 | tempad.py | Python + tkinter | 4 módulos |
-| v2 | DarkNet_Tools.bat | Batch | 9 opções |
-| v3 | painel_suporte.bat | Batch | 26 opções |
-| v3 | ping_report.ps1 | PowerShell | Relatório IPs |
-| v1 | disk_check.py | Python OOP | 5 módulos |
+| Versão | Módulo / Script | Tecnologia | Foco / Recursos |
+| --- | --- | --- | --- |
+| **v1.0** | `tempad.py` | Python + Tkinter | Interface gráfica desktop inicial |
+| **v2.0** | `DarkNet_Tools.bat` | Batch Script | Diagnóstico ágil de rede via terminal |
+| **v3.0** | `painel_suporte.bat` | Batch Script | Suporte completo de TI (26 funções) |
+| **v3.1** | `ping_report.ps1` | PowerShell | Varredura de latência em massa |
+| **v3.2** | `disk_check.py` | Python (OOP) | Verificação robusta de integridade física e lógica |
+| **v3.3** | **TemPad Web** | Flask + Bootstrap 5 + JS Audio | UI Web CRT, efeitos sonoros sintetizados e execução web |
 
 ---
 
-## 🚀 Próximos Passos
+## 🛠️ Como Executar o TemPad Web
 
-- [ ] Corrigir caminhos hardcoded no `tempad.py`
-- [ ] Melhorar log em tempo real na GUI
-- [ ] Exportar relatório de ping em `.html` ou `.csv`
-- [ ] Tornar lista de IPs configurável via arquivo externo
-- [ ] Unificar tudo em um executável único
-- [ ] Comentar todos os scripts detalhadamente
-- [ ] Explorar automação com Python + SSH (Netmiko/Paramiko) para equipamentos Cisco
+1. **Clone o repositório:**
+```bash
+git clone [https://github.com/MatheusIASIN/DarkNet-Tools.git](https://github.com/MatheusIASIN/DarkNet-Tools.git)
+cd DarkNet-Tools
+
+```
+
+
+2. **Instale as dependências:**
+```bash
+pip install flask
+
+```
+
+
+3. **Inicie o servidor:**
+```bash
+python Rare/main_web.py
+
+```
+
+
+4. **Acesse no navegador:**
+Abra `http://localhost:5000` (ou utilize a porta encaminhada no GitHub Codespaces).
 
 ---
 
-## 🎯 Contexto
+## 🎯 Próximos Passos & Roadmap
 
-Ferramentas desenvolvidas para suporte técnico no dia a dia, com foco em diagnóstico de redes e manutenção de sistemas Windows. Cada opção foi adicionada conforme problemas reais foram encontrados no trabalho.
+* [x] Unificar módulos Python em servidor web com Flask
+* [x] Adicionar estilização CRT e suporte ao Bootstrap 5
+* [x] Implementar efeitos sonoros com Web Audio API
+* [ ] Implementar streaming de log em tempo real via SSE (Server-Sent Events)
+* [ ] Limpeza/formatação HTML dos códigos de escape ANSI do terminal
+* [ ] Exportar relatórios de diagnóstico em `.pdf` / `.html`
+* [ ] Empacotar a aplicação web como executável standalone (`PyInstaller`)
 
-**Linguagens:** Python · Batch · PowerShell  
-**Área:** Suporte técnico · Redes · Automação  
-**Inspiração visual:** TemPad — Loki (Marvel/Disney+)
+---
+
+## 📜 Licença e Créditos
+
+Desenvolvido por **[Matheus Iasin](https://github.com/MatheusIASIN)** como ferramenta de uso real em rotinas de suporte técnico e infraestrutura.
+
+*Inspiração estética:* TemPad / TVA (Time Variance Authority) da série Loki (Marvel Studios).
+
+```
+
+```
