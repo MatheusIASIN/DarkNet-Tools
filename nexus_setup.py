@@ -11,6 +11,9 @@
 
 import os
 import sys
+import time
+import random
+import string
 import platform
 import subprocess
 import ctypes
@@ -202,21 +205,80 @@ def get_storage_details() -> str:
     return f"{used_gb:.0f} GB de {total_gb:.0f} GB usados ({disk_type})"
 
 # ---------------------------------------------------------------------------
-# Componentes Visuais do Terminal
+# Animações & Componentes Visuais do Terminal
 # ---------------------------------------------------------------------------
-def render_banner() -> None:
+def render_banner(animado: bool = True) -> None:
+    """Projeta a banner ASCII com animação de varredura estilo monitor da TVA."""
     os.system('cls' if os.name == 'nt' else 'clear')
-    banner = f"""{CLR_AMBER}
- ████████╗███████╗███╗   ███╗██████╗  █████╗ ██████╗ 
- ╚══██╔══╝██╔════╝████╗ ████║██╔══██╗██╔══██╗██╔══██╗
-    ██║   █████╗  ██╔████╔██║██████╔╝███████║██║  ██║
-    ██║   ██╔══╝  ██║╚██╔╝██║██╔═══╝ ██╔══██║██║  ██║
-    ██║   ███████╗██║ ╚═╝ ██║██║     ██║  ██║██████╔╝
-    ╚═╝   ╚══════╝╚═╝     ╚═╝╚═╝     ╚═╝  ╚═╝╚═════╝ 
- ╔══════════════════════════════════════════════════════════════════╗
- ║     TIME VARIANCE AUTHORITY — NEXUS INSTALLATION ENGINE          ║
- ╚══════════════════════════════════════════════════════════════════╝{CLR_RESET}"""
-    print(banner)
+    
+    banner_lines = [
+        r" █████╗ ███████╗████████╗██╗  ██╗███████╗██████╗ ",
+        r"██╔══██╗██╔════╝╚══██╔══╝██║  ██║██╔════╝██╔══██╗",
+        r"███████║█████╗     ██║   ███████║█████╗  ██████╔╝",
+        r"██╔══██║██╔══╝     ██║   ██╔══██║██╔══╝  ██╔══██╗",
+        r"██║  ██║███████╗   ██║   ██║  ██║███████╗██║  ██║",
+        r"╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝",
+        r"███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗      ",
+        r"████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝      ",
+        r"██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗      ",
+        r"██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║      ",
+        r"██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║      ",
+        r"╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝      ",
+        r"             ─── C H R O N O S ───               ",
+        r" ╔══════════════════════════════════════════════════════════════════╗",
+        r" ║     TIME VARIANCE AUTHORITY — NEXUS INSTALLATION ENGINE          ║",
+        r" ╚══════════════════════════════════════════════════════════════════╝"
+    ]
+
+    for line in banner_lines:
+        # Destaca temporariamente a linha que está sendo 'varrida' em tom brilhante
+        if animado:
+            sys.stdout.write(f"{CLR_BRIGHT}{line}{CLR_RESET}\n")
+            sys.stdout.flush()
+            time.sleep(0.035)
+            # Retorna para a cor âmbar padrão
+            sys.stdout.write(f"\033[F{CLR_AMBER}{line}{CLR_RESET}\n")
+        else:
+            print(f"{CLR_AMBER}{line}{CLR_RESET}")
+
+def barra_progresso_tva(atual: int, total: int, prefixo: str = "", largura: int = 25) -> None:
+    """Exibe uma barra de carregamento dinâmica estilo TemPad."""
+    percentual = atual / float(total)
+    preenchidos = int(largura * percentual)
+    barra = '█' * preenchidos + '░' * (largura - preenchidos)
+    sys.stdout.write(
+        f"\r {CLR_DIM}│{CLR_RESET} {prefixo:<22} {CLR_AMBER}[{barra}]{CLR_RESET} {CLR_BRIGHT}{int(percentual * 100):>3}%{CLR_RESET}"
+    )
+    sys.stdout.flush()
+    if atual == total:
+        sys.stdout.write("\n")
+
+def efeito_glitch(texto_final: str, duracao_frames: int = 5) -> None:
+    """Animação que decodifica o texto caractere por caractere."""
+    chars = string.ascii_uppercase + string.digits + "!@#$%^&*"
+    texto_atual = [" "] * len(texto_final)
+    
+    for i in range(len(texto_final)):
+        for _ in range(duracao_frames):
+            char_temp = random.choice(chars)
+            sys.stdout.write(f"\r{CLR_AMBER}{''.join(texto_atual[:i])}{CLR_BRIGHT}{char_temp}{CLR_RESET}")
+            sys.stdout.flush()
+            time.sleep(0.01)
+        texto_atual[i] = texto_final[i]
+    
+    sys.stdout.write(f"\r{CLR_GREEN}{''.join(texto_final)}{CLR_RESET}\n")
+
+def spinner_tva(mensagem: str, segundos: float = 1.0) -> None:
+    """Indicador animado de carregamento estilo TVA."""
+    frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+    fim = time.time() + segundos
+    i = 0
+    while time.time() < fim:
+        sys.stdout.write(f"\r{CLR_AMBER}{frames[i % len(frames)]}{CLR_RESET} {mensagem}...")
+        sys.stdout.flush()
+        time.sleep(0.07)
+        i += 1
+    sys.stdout.write(f"\r{CLR_GREEN}[✓]{CLR_RESET} {mensagem} COMPLETO!   \n")
 
 def draw_box(title: str, items: list) -> None:
     width = 68
@@ -234,24 +296,26 @@ def check_and_install_packages() -> list:
     title = "VERIFICANDO DEPENDÊNCIAS PIP"
     print(f"\n{CLR_DIM}┌──[{CLR_RESET} {CLR_BRIGHT}{title}{CLR_RESET} {CLR_DIM}]" + "─" * (width - len(title) - 7) + "┐" + CLR_RESET)
     
+    total_pacotes = len(REQUIRED_PACKAGES)
     failed = []
-    for import_name, pip_name in REQUIRED_PACKAGES:
+
+    for idx, (import_name, pip_name) in enumerate(REQUIRED_PACKAGES, 1):
+        barra_progresso_tva(idx - 1, total_pacotes, prefixo=f"CHECANDO {pip_name[:12]}")
+        
         is_installed = importlib.util.find_spec(import_name) is not None
         
-        if is_installed:
-            print(f" {CLR_DIM}│{CLR_RESET} [✓] {pip_name:<26} {CLR_GREEN}→ INSTALADO{CLR_RESET}")
-        else:
-            print(f" {CLR_DIM}│{CLR_RESET} [⚡] {pip_name:<26} {CLR_AMBER}→ INSTALANDO...{CLR_RESET}", end="", flush=True)
+        if not is_installed:
             try:
                 subprocess.check_call(
                     [sys.executable, "-m", "pip", "install", pip_name],
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL
                 )
-                print(f"\r {CLR_DIM}│{CLR_RESET} [✓] {pip_name:<26} {CLR_GREEN}→ INSTALADO OK{CLR_RESET}   ")
             except Exception:
-                print(f"\r {CLR_DIM}│{CLR_RESET} [X] {pip_name:<26} {CLR_RED}→ FALHA{CLR_RESET}          ")
                 failed.append(pip_name)
+        
+        time.sleep(0.08)
+        barra_progresso_tva(idx, total_pacotes, prefixo=f"CHECANDO {pip_name[:12]}")
 
     print(f"{CLR_DIM}└" + "─" * (width - 1) + "┘" + CLR_RESET)
     return failed
@@ -260,7 +324,12 @@ def check_and_install_packages() -> list:
 # Execução Principal
 # ---------------------------------------------------------------------------
 def main() -> None:
-    render_banner()
+    render_banner(animado=True)
+    print()
+
+    # Spinners de Inicialização estilo TVA
+    spinner_tva("SINCRONIZANDO COM AETHERNEXUS CHRONOS", 1.2)
+    spinner_tva("INSPECIONANDO HARDWARE DO DISPOSITIVO", 0.8)
 
     # Leitura e Impressão das Informações do Dispositivo
     device_info = [
@@ -276,7 +345,7 @@ def main() -> None:
     ]
     draw_box("STATUS DO DISPOSITIVO", device_info)
 
-    # Checagem do PIP
+    # Checagem do PIP com Barra de Carregamento
     failed_packages = check_and_install_packages()
 
     # Diagnóstico Final
@@ -284,7 +353,8 @@ def main() -> None:
     if failed_packages:
         print(f" {CLR_DIM}│{CLR_RESET} {CLR_RED}[!] FALHA AO INSTALAR: {', '.join(failed_packages)}{CLR_RESET}")
     else:
-        print(f" {CLR_DIM}│{CLR_RESET} {CLR_GREEN}[✓] NENHUM EVENTO NEXUS DETECTADO. TUDO PRONTO!{CLR_RESET}")
+        sys.stdout.write(f" {CLR_DIM}│{CLR_RESET} ")
+        efeito_glitch("[✓] NENHUM EVENTO NEXUS DETECTADO. AETHERNEXUS-CHRONOS OS ONLINE!")
     print(f"{CLR_DIM}└" + "─" * 67 + "┘" + CLR_RESET)
 
     print(f"\n{CLR_AMBER}▶ Digite {CLR_BRIGHT}python main_web.py{CLR_AMBER} para iniciar o TemPad OS.{CLR_RESET}\n")
@@ -296,3 +366,4 @@ if __name__ == "__main__":
         print(f"\n\n{CLR_RED}[!] Instalação interrompida pelo usuário.{CLR_RESET}\n")
     except Exception as err:
         print(f"\n{CLR_RED}[X] ERRO CRÍTICO DURANTE O SETUP: {err}{CLR_RESET}\n")
+        
