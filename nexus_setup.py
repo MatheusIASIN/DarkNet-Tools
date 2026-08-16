@@ -4,7 +4,7 @@
 ===============================================================================
  TIME VARIANCE AUTHORITY — NEXUS INSTALLATION ENGINE (nexus_setup.py)
  -----------------------------------------------------------------------------
- Módulo de Bootstrap Nativo & Diagnóstico de Hardware da TVA.
+ Módulo de Bootstrap Nativo, Diagnóstico de Hardware & Auto-Launch do TemPad.
  100% Python Standard Library — Zero Dependências Prévias.
 ===============================================================================
 """
@@ -19,6 +19,8 @@ import subprocess
 import ctypes
 import importlib.util
 import shutil
+import webbrowser
+import threading
 
 # Módulo Winreg condicional (Windows)
 if os.name == 'nt':
@@ -35,7 +37,6 @@ def setup_terminal() -> None:
     if os.name == 'nt':
         try:
             kernel32 = ctypes.windll.kernel32
-            # ENABLE_PROCESSED_OUTPUT | ENABLE_WRAP_AT_EOL_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING
             kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
         except Exception:
             pass
@@ -52,7 +53,7 @@ CLR_CYAN   = "\033[38;2;0;200;255m"     # Ciano destaques
 CLR_RESET  = "\033[0m"
 
 # ---------------------------------------------------------------------------
-# Módulos Necessários no Stack (FastAPI / WebSockets / Timedoor / Spatial)
+# Módulos Necessários no Stack
 # ---------------------------------------------------------------------------
 REQUIRED_PACKAGES = [
     ("fastapi", "fastapi"),
@@ -84,7 +85,7 @@ def get_hostname() -> str:
     return platform.node() or os.getenv('COMPUTERNAME', 'Unknown')
 
 def get_detailed_os() -> str:
-    """Detecta a distribuição Linux exata (ex: Ubuntu no Colab), Windows ou macOS."""
+    """Detecta a distribuição Linux exata, Windows ou macOS."""
     sys_name = platform.system()
     is_colab = "COLAB_RELEASE_TAG" in os.environ or "COLAB_GPU" in os.environ
     colab_prefix = "GOOGLE COLAB " if is_colab else ""
@@ -231,12 +232,10 @@ def render_banner(animado: bool = True) -> None:
     ]
 
     for line in banner_lines:
-        # Destaca temporariamente a linha que está sendo 'varrida' em tom brilhante
         if animado:
             sys.stdout.write(f"{CLR_BRIGHT}{line}{CLR_RESET}\n")
             sys.stdout.flush()
-            time.sleep(0.035)
-            # Retorna para a cor âmbar padrão
+            time.sleep(0.025)
             sys.stdout.write(f"\033[F{CLR_AMBER}{line}{CLR_RESET}\n")
         else:
             print(f"{CLR_AMBER}{line}{CLR_RESET}")
@@ -253,7 +252,7 @@ def barra_progresso_tva(atual: int, total: int, prefixo: str = "", largura: int 
     if atual == total:
         sys.stdout.write("\n")
 
-def efeito_glitch(texto_final: str, duracao_frames: int = 5) -> None:
+def efeito_glitch(texto_final: str, duracao_frames: int = 4) -> None:
     """Animação que decodifica o texto caractere por caractere."""
     chars = string.ascii_uppercase + string.digits + "!@#$%^&*"
     texto_atual = [" "] * len(texto_final)
@@ -263,12 +262,12 @@ def efeito_glitch(texto_final: str, duracao_frames: int = 5) -> None:
             char_temp = random.choice(chars)
             sys.stdout.write(f"\r{CLR_AMBER}{''.join(texto_atual[:i])}{CLR_BRIGHT}{char_temp}{CLR_RESET}")
             sys.stdout.flush()
-            time.sleep(0.01)
+            time.sleep(0.008)
         texto_atual[i] = texto_final[i]
     
     sys.stdout.write(f"\r{CLR_GREEN}{''.join(texto_final)}{CLR_RESET}\n")
 
-def spinner_tva(mensagem: str, segundos: float = 1.0) -> None:
+def spinner_tva(mensagem: str, segundos: float = 0.8) -> None:
     """Indicador animado de carregamento estilo TVA."""
     frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
     fim = time.time() + segundos
@@ -276,7 +275,7 @@ def spinner_tva(mensagem: str, segundos: float = 1.0) -> None:
     while time.time() < fim:
         sys.stdout.write(f"\r{CLR_AMBER}{frames[i % len(frames)]}{CLR_RESET} {mensagem}...")
         sys.stdout.flush()
-        time.sleep(0.07)
+        time.sleep(0.06)
         i += 1
     sys.stdout.write(f"\r{CLR_GREEN}[✓]{CLR_RESET} {mensagem} COMPLETO!   \n")
 
@@ -314,11 +313,38 @@ def check_and_install_packages() -> list:
             except Exception:
                 failed.append(pip_name)
         
-        time.sleep(0.08)
+        time.sleep(0.05)
         barra_progresso_tva(idx, total_pacotes, prefixo=f"CHECANDO {pip_name[:12]}")
 
     print(f"{CLR_DIM}└" + "─" * (width - 1) + "┘" + CLR_RESET)
     return failed
+
+# ---------------------------------------------------------------------------
+# Auto-Lançador do Servidor Web e Navegador
+# ---------------------------------------------------------------------------
+def launch_web_app() -> None:
+    """Dispara a aplicação FastAPI e abre o navegador automaticamente em paralelo."""
+    app_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "aether_nexus_app.py")
+    
+    if not os.path.exists(app_path):
+        print(f"\n{CLR_RED}[X] ERRO CRÍTICO: O arquivo 'aether_nexus_app.py' não existe na mesma pasta.{CLR_RESET}\n")
+        return
+
+    print(f"\n{CLR_BRIGHT}▶ INICIANDO AETHERNEXUS TEMPAD WEB OS...{CLR_RESET}")
+    print(f"{CLR_AMBER}  Servidor local: http://127.0.0.1:5000{CLR_RESET}")
+    print(f"{CLR_AMBER}  Abrindo navegador automaticamente...{CLR_RESET}\n")
+    time.sleep(1)
+
+    def abrir_navegador():
+        time.sleep(1.8)
+        webbrowser.open("http://127.0.0.1:5000")
+
+    threading.Thread(target=abrir_navegador, daemon=True).start()
+
+    try:
+        subprocess.run([sys.executable, app_path])
+    except KeyboardInterrupt:
+        print(f"\n\n{CLR_RED}[!] Servidor TemPad encerrado pelo usuário.{CLR_RESET}\n")
 
 # ---------------------------------------------------------------------------
 # Execução Principal
@@ -328,8 +354,8 @@ def main() -> None:
     print()
 
     # Spinners de Inicialização estilo TVA
-    spinner_tva("SINCRONIZANDO COM AETHERNEXUS CHRONOS", 1.2)
-    spinner_tva("INSPECIONANDO HARDWARE DO DISPOSITIVO", 0.8)
+    spinner_tva("SINCRONIZANDO COM AETHERNEXUS CHRONOS", 1.0)
+    spinner_tva("INSPECIONANDO HARDWARE DO DISPOSITIVO", 0.7)
 
     # Leitura e Impressão das Informações do Dispositivo
     device_info = [
@@ -357,7 +383,8 @@ def main() -> None:
         efeito_glitch("[✓] NENHUM EVENTO NEXUS DETECTADO. AETHERNEXUS-CHRONOS OS ONLINE!")
     print(f"{CLR_DIM}└" + "─" * 67 + "┘" + CLR_RESET)
 
-    print(f"\n{CLR_AMBER}▶ Digite {CLR_BRIGHT}python main_web.py{CLR_AMBER} para iniciar o TemPad OS.{CLR_RESET}\n")
+    # Disparo Automático Sem Intervenção Manual
+    launch_web_app()
 
 if __name__ == "__main__":
     try:
@@ -366,4 +393,3 @@ if __name__ == "__main__":
         print(f"\n\n{CLR_RED}[!] Instalação interrompida pelo usuário.{CLR_RESET}\n")
     except Exception as err:
         print(f"\n{CLR_RED}[X] ERRO CRÍTICO DURANTE O SETUP: {err}{CLR_RESET}\n")
-        
